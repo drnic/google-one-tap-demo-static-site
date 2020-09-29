@@ -1,5 +1,8 @@
 import Vue from "vue";
+import VueCookie from "vue-cookie";
+Vue.use(VueCookie);
 import App from "./App.vue";
+
 import "./assets/tailwind.css";
 
 Vue.config.productionTip = false;

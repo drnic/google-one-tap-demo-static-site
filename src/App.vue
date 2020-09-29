@@ -109,6 +109,9 @@ export default {
   },
   created() {
     window.appRef = this;
+    this.userName = this.$cookie.get("userName");
+    this.userImage = this.$cookie.get("userImage");
+    this.hasLoggedIn = this.userName !== "";
   },
 
   methods: {
@@ -116,6 +119,8 @@ export default {
       console.log(idTokenPayload);
       this.userName = idTokenPayload.name;
       this.userImage = idTokenPayload.picture;
+      this.$cookie.set("userName", this.userName, 7); // expire in 7 days
+      this.$cookie.set("userImage", this.userImage, 7); // expire in 7 days
       this.hasLoggedIn = true;
     }
   }
