@@ -80,15 +80,22 @@
 </template>
 
 <script>
-// var verifier = require("google-id-token-verifier");
+const { OAuth2Client } = require("google-auth-library")
 
 window.handleGoogleOneTapResponse = function(resp) {
-  console.log(resp)
-  // verifier.verify(resp.credential, resp.clientId, function(err, tokenInfo) {
-  //   console.log(err);
-  //   console.log(tokenInfo);
-  // });
-  // vuecomponent.handleGoogleOneTapResponse(e);
+  const client = new OAuth2Client(resp.clientId)
+  async function verify() {
+    const ticket = await client.verifyIdToken({
+      idToken: resp.credential,
+      audience: resp.clientId,
+    })
+    const payload = ticket.getPayload()
+    // const userid = payload["sub"]
+    // If request specified a G Suite domain:
+    // const domain = payload['hd'];
+    console.log(payload)
+  }
+  verify().catch(console.error)
 }
 
 export default {
