@@ -4,6 +4,6 @@ import "./assets/tailwind.css";
 
 Vue.config.productionTip = false;
 
-new Vue({
-  render: h => h(App)
+window.vm = new Vue({
+  render: (h) => h(App)
 }).$mount("#app");

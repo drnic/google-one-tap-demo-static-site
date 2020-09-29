@@ -26,8 +26,8 @@
                 >
                   <img
                     class="h-8 w-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=144&h=144&q=80"
-                    alt=""
+                    :src="userImage"
+                    :alt="userName"
                   />
                 </button>
               </div>
@@ -90,10 +90,7 @@ window.handleGoogleOneTapResponse = function(resp) {
       audience: resp.clientId
     });
     const payload = ticket.getPayload();
-    // const userid = payload["sub"]
-    // If request specified a G Suite domain:
-    // const domain = payload['hd'];
-    console.log(payload);
+    window.appRef.userLogin(payload);
   }
   verify().catch(console.error);
 };
@@ -104,14 +101,22 @@ export default {
   data() {
     return {
       hasLoggedIn: false,
+      userImage: "",
+      userName: "",
       isAccountMenuOpen: false,
       isLeftSidebarOpenMobile: false
     };
   },
+  created() {
+    window.appRef = this;
+  },
 
   methods: {
-    handleGoogleOneTapResponse(e) {
-      console.log(e);
+    userLogin(idTokenPayload) {
+      console.log(idTokenPayload);
+      this.userName = idTokenPayload.name;
+      this.userImage = idTokenPayload.picture;
+      this.hasLoggedIn = true;
     }
   }
 };
