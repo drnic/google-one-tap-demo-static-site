@@ -80,23 +80,23 @@
 </template>
 
 <script>
-const { OAuth2Client } = require("google-auth-library")
+const { OAuth2Client } = require("google-auth-library");
 
 window.handleGoogleOneTapResponse = function(resp) {
-  const client = new OAuth2Client(resp.clientId)
+  const client = new OAuth2Client(resp.clientId);
   async function verify() {
     const ticket = await client.verifyIdToken({
       idToken: resp.credential,
-      audience: resp.clientId,
-    })
-    const payload = ticket.getPayload()
+      audience: resp.clientId
+    });
+    const payload = ticket.getPayload();
     // const userid = payload["sub"]
     // If request specified a G Suite domain:
     // const domain = payload['hd'];
-    console.log(payload)
+    console.log(payload);
   }
-  verify().catch(console.error)
-}
+  verify().catch(console.error);
+};
 
 export default {
   name: "App",
@@ -105,14 +105,14 @@ export default {
     return {
       hasLoggedIn: false,
       isAccountMenuOpen: false,
-      isLeftSidebarOpenMobile: false,
-    }
+      isLeftSidebarOpenMobile: false
+    };
   },
 
   methods: {
     handleGoogleOneTapResponse(e) {
-      console.log(e)
-    },
-  },
-}
+      console.log(e);
+    }
+  }
+};
 </script>
