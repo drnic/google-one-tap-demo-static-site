@@ -27,8 +27,8 @@
                 >
                   <img
                     class="h-8 w-8 rounded-full"
-                    :src="userImage"
-                    :alt="userName"
+                    :src="user.image"
+                    :alt="user.name"
                   />
                 </button>
               </div>
@@ -52,6 +52,12 @@
                   aria-orientation="vertical"
                   aria-labelledby="user-menu"
                 >
+                  <span class="block px-4 py-2 font-bold text-sm text-gray-700">
+                    {{ user.name }}
+                  </span>
+                  <span class="block px-4 py-2 text-sm text-gray-700">
+                    {{ user.email }}
+                  </span>
                   <a
                     href="#"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
@@ -90,35 +96,49 @@ export default {
   components: {},
   data() {
     return {
-      hasLoggedIn: false,
-      userImage: "",
-      userName: "",
+      user: {},
       isAccountMenuOpen: false,
       isLeftSidebarOpenMobile: false
     };
   },
   created() {
     window.appRef = this;
-    this.userName = this.$cookie.get("userName");
-    this.userImage = this.$cookie.get("userImage");
-    this.hasLoggedIn = this.userName !== "";
+    this.user.name = this.$cookie.get("user.name");
+    this.user.image = this.$cookie.get("user.picture");
+    this.user.email = this.$cookie.get("user.email");
+    if (this.user === null) {
+      this.user = {};
+    }
+    console.log(this.user);
   },
 
   methods: {
     userLogin(idTokenPayload) {
       console.log(idTokenPayload);
-      this.userName = idTokenPayload.name;
-      this.userImage = idTokenPayload.picture;
-      this.$cookie.set("userName", this.userName, 7); // expire in 7 days
-      this.$cookie.set("userImage", this.userImage, 7); // expire in 7 days
-      this.hasLoggedIn = this.userName !== "";
+      this.user = {
+        name: idTokenPayload.name,
+        image: idTokenPayload.picture,
+        email: idTokenPayload.email
+      };
+      this.$cookie.set("user.name", this.user.name, 7); // expire in 7 days
+      this.$cookie.set("user.image", this.user.picture, 7); // expire in 7 days
+      this.$cookie.set("user.email", this.user.email, 7); // expire in 7 days
     },
     toggleDropDownMenu() {
       this.isAccountMenuOpen = !this.isAccountMenuOpen;
     },
     signOut() {
-      this.userLogin({ name: "", image: "" });
+      this.userLogin({ name: "", image: "", email: "" });
       document.location.reload();
+    }
+  },
+  computed: {
+    hasLoggedIn() {
+      return (
+        typeof this.user.name !== "undefined" &&
+        this.user.name !== null &&
+        this.user.name !== ""
+      );
     }
   }
 };
