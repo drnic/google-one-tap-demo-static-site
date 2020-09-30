@@ -23,6 +23,7 @@
                   id="user-menu"
                   aria-label="User menu"
                   aria-haspopup="true"
+                  @click="toggleDropDownMenu"
                 >
                   <img
                     class="h-8 w-8 rounded-full"
@@ -55,18 +56,7 @@
                     href="#"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                     role="menuitem"
-                    >Your Profile</a
-                  >
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-                    role="menuitem"
-                    >Settings</a
-                  >
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-                    role="menuitem"
+                    @click="signOut"
                     >Sign out</a
                   >
                 </div>
@@ -121,7 +111,14 @@ export default {
       this.userImage = idTokenPayload.picture;
       this.$cookie.set("userName", this.userName, 7); // expire in 7 days
       this.$cookie.set("userImage", this.userImage, 7); // expire in 7 days
-      this.hasLoggedIn = true;
+      this.hasLoggedIn = this.userName !== "";
+    },
+    toggleDropDownMenu() {
+      this.isAccountMenuOpen = !this.isAccountMenuOpen;
+    },
+    signOut() {
+      this.userLogin({ name: "", image: "" });
+      document.location.reload();
     }
   }
 };
